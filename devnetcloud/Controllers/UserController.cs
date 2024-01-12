@@ -71,7 +71,7 @@ namespace devnetcloud.Controllers
             if (ModelState.IsValid)
             {
 
-                if (_userService.UpdatePassword(form))
+                if (_userService.UpdatePassword(form).Result == true)
                 {
                     return RedirectToAction("Index");
                 }
@@ -86,7 +86,7 @@ namespace devnetcloud.Controllers
 
         public IActionResult Delete(int id)
         {
-            if (_userService.Delete(id))
+            if (_userService.Delete(id).Result == true)
             {
                 return RedirectToAction("Index");
             }

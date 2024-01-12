@@ -12,8 +12,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<UserService>();
 
+builder.Services.AddScoped<IUserRepository, UserRepositoryDb>(x => new UserRepositoryDb());
 
-builder.Services.AddScoped<IUserRepository, UserRepositoryDb>(x => new UserRepositoryDb(builder.Configuration.GetConnectionString("DevNetCloudDB")));
+//builder.Services.AddScoped<IUserRepository, UserRepositoryDb>(x => new UserRepositoryDb(builder.Configuration.GetConnectionString("DevNetCloudDB")));
 
 var app = builder.Build();
 

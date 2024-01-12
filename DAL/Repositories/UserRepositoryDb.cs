@@ -31,7 +31,7 @@ namespace DAL.Repositories
         }
 
 
-        public async Task Create(User user)
+        public async Task<User> Create(User user)
         {
             string newJson = JsonConvert.SerializeObject(user);
             HttpContent content = new StringContent(newJson, Encoding.UTF8,"application/json");
@@ -40,12 +40,12 @@ namespace DAL.Repositories
             {
                 using(HttpResponseMessage message = await client.PostAsync("user", content))
                 {
-                    Console.WriteLine("ok");
+                    return user;
                 }
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw ex;
             }
         }
 
@@ -62,7 +62,7 @@ namespace DAL.Repositories
         }
 
         List<User> _users = new List<User>();
-        public async Task GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
             try
             {
@@ -73,42 +73,43 @@ namespace DAL.Repositories
                     string json = message.Content.ReadAsStringAsync().Result;
 
                     _users = JsonConvert.DeserializeObject<List<User>>(json);
+                    return _users;
                 }
             }catch (HttpRequestException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw ex;
             }
         }
 
-        public async Task? GetByEmail(string email)
+        public async Task<User> GetByEmail(string email)
         {
             try
             {
                 using(HttpResponseMessage message = await client.GetAsync($"{email}"))
                 {
                     string json = message.Content.ReadAsStringAsync().Result;
-                    _users = JsonConvert.DeserializeObject<List<User>>(json);
+                    return JsonConvert.DeserializeObject<User>(json);
                 }
             }catch(HttpRequestException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw ex;
             }
         }
 
-        public async Task? GetById(int id)
+        public async Task<User> GetById(int id)
         {
             try
             {
                 using (HttpResponseMessage message = await client.GetAsync($"{id}"))
                 {
                     string json = message.Content.ReadAsStringAsync().Result;
-                    User u = (User)JsonConvert.DeserializeObject(json);
+                    return (User)JsonConvert.DeserializeObject(json);
                 }
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine(ex.Message);
-            }
+                throw ex;
+             }
         }
 
         public async Task<bool> Update(User user)

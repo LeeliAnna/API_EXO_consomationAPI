@@ -21,9 +21,9 @@ namespace BLL.Services
             _userRepository = userRepository;
         }
 
-        public User? Create(RegisterForm form)
+        public async Task<User>? Create(RegisterForm form)
         {
-            User? u = _userRepository.GetByEmail(form.Email);
+            User? u = await _userRepository.GetByEmail(form.Email);
 
             if (u == null)
             {
@@ -31,7 +31,7 @@ namespace BLL.Services
 
                 user.Password = BCrypt.Net.BCrypt.HashPassword(form.Password);
 
-                user = _userRepository.Create(user);
+                await _userRepository.Create(user);
                 return user;
             }
 
@@ -46,37 +46,37 @@ namespace BLL.Services
 
         public User? GetById(int id)
         {
-            return _userRepository.GetById(id);
+            return _userRepository.GetById(id).Result;
         }
 
         public IEnumerable<User> GetAll()
         {
-            return _userRepository.GetAll();
+            return _userRepository.GetAll().Result;
         }
 
-        public bool UpdatePassword(UpdatePasswordForm form)
+        public async Task<bool> UpdatePassword(UpdatePasswordForm form)
         {
-            User? u = _userRepository.GetById(form.Id);
+            User? u = await _userRepository.GetById(form.Id);
 
             if (u != null)
             {
                 if (BCrypt.Net.BCrypt.Verify(form.OldPassword, u.Password))
                 {
                     u.Password = BCrypt.Net.BCrypt.HashPassword(form.Password);
-                    return _userRepository.Update(u);
+                    return _userRepository.Update(u).Result;
                 }
             }
 
             return false;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            User? u = _userRepository.GetById(id);
+            User? u = await _userRepository.GetById(id);
 
             if (u is not null)
             {
-                return _userRepository.Delete(u);
+                return _userRepository.Delete(u).Result;
             }
 
             return false;

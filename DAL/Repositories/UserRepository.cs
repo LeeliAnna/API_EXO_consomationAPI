@@ -57,7 +57,7 @@ namespace DAL.Repositories
         //    FakeDB.Users.Remove(user);
         //    return true;
         //}
-        public Task Create(User user)
+        public Task<User> Create(User user)
         {
             throw new NotImplementedException();
         }
@@ -67,17 +67,17 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public Task GetAll()
+        public Task<IEnumerable<User>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task? GetByEmail(string email)
+        public Task<User>? GetByEmail(string email)
         {
             throw new NotImplementedException();
         }
 
-        public Task? GetById(int id)
+        public Task<User>? GetById(int id)
         {
             throw new NotImplementedException();
         }
